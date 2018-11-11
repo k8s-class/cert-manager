@@ -1,8 +1,5 @@
-# cert-manager
-How to use cert-manager and setup ingress controller with LetsEncrypt
-
 ############################################################################
-# Install Cert Manager for Ingress Controller
+# Install Cert Manager 
 ############################################################################
 ```
 helm install \
