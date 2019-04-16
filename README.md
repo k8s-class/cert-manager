@@ -2,16 +2,27 @@
 # Install Cert Manager 
 ############################################################################
 ```
-kubectl label namespace kube-system certmanager.k8s.io/disable-validation=true
+# Install the CustomResourceDefinition resources separately
+kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.7/deploy/manifests/00-crds.yaml
 
-kubectl apply \
-    -f https://raw.githubusercontent.com/jetstack/cert-manager/release-0.6/deploy/manifests/00-crds.yaml
+# Create the namespace for cert-manager
+kubectl create namespace cert-manager
 
-helm install stable/cert-manager \
-    --namespace kube-system \
-    --set ingressShim.defaultIssuerName=letsencrypt-prod \
-    --set ingressShim.defaultIssuerKind=ClusterIssuer \
-    --version v0.6.6
+# Label the cert-manager namespace to disable resource validation
+kubectl label namespace cert-manager certmanager.k8s.io/disable-validation=true
+
+# Add the Jetstack Helm repository
+helm repo add jetstack https://charts.jetstack.io
+
+# Update your local Helm chart repository cache
+helm repo update
+
+# Install the cert-manager Helm chart
+helm install \
+  --name cert-manager \
+  --namespace cert-manager \
+  --version v0.7.0 \
+  jetstack/cert-manager
 
 
     apiVersion: certmanager.k8s.io/v1alpha1
